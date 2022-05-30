@@ -15,9 +15,10 @@ export default function Home() {
   },[])
 
   const loadNfts = async ()=>{
-    const provider = new ethers.providers.JsonRpcProvider();
-    const tokenContract = new ethers.Contract(nftAddress,NFT.abi,provider);
-    const marketcontract= new ethers.Contract(marketPlaceAddress, NFTMarketPlace.abi,provider);
+    const provider =  new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner()
+    const tokenContract = new ethers.Contract(nftAddress,NFT.abi,signer);
+    const marketcontract= new ethers.Contract(marketPlaceAddress, NFTMarketPlace.abi,signer);
     const data = await marketcontract.fetchMarketItems();
     const items = await Promise.all(data.map(async i =>{
       const tokenUri = await marketcontract.tokenURI(i.tokenId);
